@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools", "setuptools_scm>=8"]
+build-backend = "setuptools.build_meta"
+
+[project]
+authors = [{name = "Pixee", email = "python@pixee.ai"}]
+version = "0.0.1"
+name = "ci-integrations"
+requires-python = ">=3.10.0"
+readme = "README.md"
+license = {file = "LICENSE"}
+description = "Pixee CLI"
+
+
+dependencies = [
+    "python-gitlab",
+    "whatthepatch",
+    "PyGithub",
+    "GitPython",
+    "load_dotenv"
+]
+
+[project.optional-dependencies]
+dev = [
+    "black",
+    "pre-commit",
+    "pylint",
+    "pytest",
+    "pytest-cov",
+    "pytest-mock",
+]
+
+[tool.setuptools]

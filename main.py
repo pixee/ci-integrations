@@ -2,8 +2,6 @@ import os
 import sys
 import json
 import subprocess
-from pathlib import Path
-
 
 from dotenv import load_dotenv
 from secrets import token_hex
@@ -80,14 +78,12 @@ def get_code_tf_results(file_path="/tmp/results.codetf.json"):
 
 def main():
 
-    print(os.environ)
-
     provider = get_provider()
     git_service = provider["client"]
     pr_id = provider["pr_id"]
 
     if provider["client"]:
-        print("service found")
+        print("Service Found")
         print(provider)
         command = ["pixee", "fix", "--apply-fixes", "--output", "/tmp/results.codetf.json"]
 
@@ -115,12 +111,10 @@ def main():
         # check if /tmp/results.codetf.json exists
         if os.path.exists("/tmp/results.codetf.json"):
             data = get_code_tf_results()
-            print(data)
             source_title = pr.title
             pr_title = f"Hardening Suggestions for: '{source_title}'."
             # create a new branch with a unique name
             new_branch_name = f"pixee_{pr_id}_{token_hex(4)}"
-            print(pr)
 
             branch = git_service.create_branch(new_branch_name, provider["source_branch"])
             print(f"Created a new branch: {branch.name}")
@@ -129,7 +123,6 @@ def main():
             description = ""
             for result in data["results"]:
                 if len(result["changeset"]):
-                    # print(result["summary"])
                     description += "## {}\n{}\n\n".format(result["summary"], result["description"])
 
                     if len(result["changeset"]) >= 1:
@@ -138,9 +131,6 @@ def main():
                 for entry in result["changeset"]:
                     try:
                         file_path = entry["path"]
-                        
-                        #with open(file_path, encoding="utf-8") as f:
-                        #    original_file_content = f.read()
                         
                         original_file_content = git_service.get_file(file_path, new_branch_name)
 
@@ -162,7 +152,6 @@ def main():
                 git_service.create_pr_comment(pr_id, comment)
         else:
             print("File not found")    
-       # print(file_list)
 
     else:
         print("service not found")

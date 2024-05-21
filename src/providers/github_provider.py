@@ -36,11 +36,18 @@ class GitHubProvider(GitProvider):
         self.repo.update_file(
             file.path, commit_message, content, file.sha, branch=branch
         )
-
+    
     def get_pr(self, pr_id):
         pr = self.repo.get_pull(pr_id)
+        files = pr.get_files()
+        changed_files = [file.filename for file in files]
+        
         return PullRequestData(
-            id=pr.number, title=pr.title, creator=pr.user.login, web_url=pr.html_url
+            id=pr.number, 
+            title=pr.title, 
+            creator=pr.user.login, 
+            web_url=pr.html_url,
+            changed_files=changed_files
         )
 
     def get_file(self, file_path, branch_name):
@@ -52,6 +59,8 @@ class GitHubProvider(GitProvider):
         pr = self.repo.create_pull(
             title=title, body=description, base=target_branch, head=source_branch
         )
+        #files = pr.get_files()
+        #changed_files = [file.filename for file in files]
 
         return PullRequestData(
             id=pr.number, title=pr.title, creator=pr.user.login, web_url=pr.html_url

@@ -13,12 +13,14 @@ class PullRequestData:
         title (str): The title of the pull request.
         creator (str): The username of the person who created the pull request.
         web_url (str): The URL to view the pull request on the web.
+        changed_files (list[str]): A list of files changed in the pull request.
     """
 
     id: int
     title: str
     creator: str
     web_url: str
+    changed_files: list[str] = None
 
 
 @dataclass

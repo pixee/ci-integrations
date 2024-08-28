@@ -7,6 +7,8 @@ from dotenv import load_dotenv
 from secrets import token_hex
 
 import whatthepatch
+from security import safe_command
+
 load_dotenv()
 
 from providers.bitbucket_provider import BitbucketProvider
@@ -99,7 +101,7 @@ def main():
         command.append(os.getcwd())
         print(command)
 
-        process = subprocess.run(command, text=True, capture_output=True, check=True)
+        process = safe_command.run(subprocess.run, command, text=True, capture_output=True, check=True)
         # Output the result
         if process.returncode == 0:
             print("Output:", process.stdout)
